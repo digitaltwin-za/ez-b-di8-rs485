@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<project>                                  
+  <executable name="dist/development/production/ezi-b-di8-RS485.X.production.elf">                 
+    <memory name="program">                 
+      <units>bytes</units>                 
+      <length>263312</length>                 
+      <used>63428</used>                     
+      <free>199884</free>                     
+    </memory>                              
+    <memory name="data">              
+      <units>bytes</units>                 
+      <length>32768</length>                 
+      <used>6837</used>                     
+      <free>25931</free>                     
+    </memory>                              
+  </executable>                            
+</project>                                 

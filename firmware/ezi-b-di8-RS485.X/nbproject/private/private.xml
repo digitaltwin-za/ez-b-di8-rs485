@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/peripheral/uart/plib_uart_common.h</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/peripheral/gpio/plib_gpio.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/app.h</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/system/console/src/sys_console.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/usb_device_init_data.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/usb/src/usb_device.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/app.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/system/int/src/sys_int.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/peripheral/uart/plib_uart4.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/osal/osal_impl_basic.h</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/peripheral/uart/plib_uart1.h</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/peripheral/uart/plib_uart1.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/tasks.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/peripheral/coretimer/plib_coretimer.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/peripheral/uart/plib_uart3.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/peripheral/uart/plib_uart2.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/main.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/peripheral/clk/plib_clk.c</file>
+            <file>file:/C:/Program%20Files/Microchip/MPLABX/v5.50/packs/Microchip/PIC32MX_DFP/1.5.259/include/proc/p32mx250f256h.h</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/exceptions.c</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/ezi-b-di8-RS485.X/nbproject/Makefile-impl.mk</file>
+            <file>file:/C:/Gitrepo/ezi-b-di8-RS485/firmware/src/config/development/system/console/src/sys_console_usb_cdc.c</file>
+        </group>
+    </open-files>
+</project-private>
