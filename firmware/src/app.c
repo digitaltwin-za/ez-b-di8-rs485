@@ -45,7 +45,10 @@
 #include "peripheral/uart/plib_uart2.h"
 #include "system/console/src/sys_console_usb_cdc.h"
 #include "system/command/sys_command.h"
-
+#include "mb.h"
+#include "mbcrc.h"
+#include "modbus_inc/mb_slaveregister.h"
+#include "modbus_inc/RS485_HAL.h"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data Definitions
@@ -56,11 +59,11 @@
 #define COM_485_2_FC DO_U2FC_PIN; /* Drives the WE/~RE of the 485 TSVR */
 
 #define SERIAL_PORT_BUFFER_SIZE 512
-#define SERIAL_PORT_COUNT 4
+#define SERIAL_PORT_COUNT 1
 
 
 volatile static uint8_t comBuffer[SERIAL_PORT_COUNT][SERIAL_PORT_BUFFER_SIZE];
-volatile static bool comDataRx[4];
+volatile static bool comDataRx[SERIAL_PORT_COUNT];
 volatile static uint8_t consoleBuffer[SERIAL_PORT_BUFFER_SIZE];
 volatile static uint16_t consoleBufferIndex = 0;
 
@@ -69,11 +72,17 @@ DRV_HANDLE time;
 SYS_CONSOLE_HANDLE console;
 
 static bool tick_1s = false;
+static bool tick_100ms = false;
+
 uint8_t i2c_write_buffer[I2C_EEPROM_PAGE_SIZE];
 uint8_t i2c_read_buffer[I2C_EEPROM_PAGE_SIZE];
-
-
-
+int data_in_buffer;
+bool CRC_check;
+volatile static uint8_t data_pass_buffer[SERIAL_PORT_BUFFER_SIZE];
+uint16_t CRCcheck;
+uint16_t CRCcheckIn;
+bool data_tx = false;
+char set[] = "Set\n\r";
 
 
 
@@ -98,7 +107,7 @@ void APP_I2C_Callback(uintptr_t context) {
 static volatile void APP_UART1_Rx_Callback(UART_EVENT event, uintptr_t context) {
     LED_1_Toggle();
     comDataRx[0] = true;
-    SYS_CONSOLE_MESSAGE("U1 Rx\n\r");
+    //  SYS_CONSOLE_MESSAGE("U1 Rx\n\r");
 }
 
 static volatile void APP_UART2_Rx_Callback(UART_EVENT event, uintptr_t context) {
@@ -207,6 +216,11 @@ static bool APP_EEPROM_UINT32_Write(
 
 }
 
+static size_t APP_UART1_Write(uint8_t* buf, uint16_t len) {
+    DO_U1FC_Set();
+    UART1_Write(buf, len);
+}
+
 static size_t APP_UART2_Write(uint8_t* buf, uint16_t len) {
     DO_U2FC_Set();
     UART2_Write(buf, len);
@@ -241,6 +255,10 @@ static bool APP_Is_Comm_Rx_Flag(void) {
 
 void APP_1s_Tick(uintptr_t context) {
     tick_1s = true;
+}
+
+void APP_100ms_Tick(uintptr_t context) {
+    tick_100ms = true;
 }
 
 static void APP_Parse_Console_Command(const char *data, uint16_t len) {
@@ -303,22 +321,23 @@ void APP_Initialize(void) {
  */
 
 void APP_Tasks(void) {
+    uint16_t len = 0, count = 0;
 
     /* Check the application's current state. */
     switch (appData.state) {
             /* Application's initial state. */
         case APP_STATE_INIT:
         {
+            data_in_buffer = 0;
             UART_SERIAL_SETUP uartSetup;
             uartSetup.baudRate = 9600;
             uartSetup.dataWidth = UART_DATA_8_BIT;
             uartSetup.parity = UART_PARITY_NONE;
             uartSetup.stopBits = UART_STOP_1_BIT;
-            //
-            //
+
             APP_Load_Settings_From_Eeprom();
             SYS_TIME_CallbackRegisterMS(APP_1s_Tick, NULL, 1000, SYS_TIME_PERIODIC);
-
+            SYS_TIME_CallbackRegisterMS(APP_1s_Tick, NULL, 100, SYS_TIME_PERIODIC);
             // RS 232 Port (Pin header on base boarD)
             uartSetup.baudRate = 9600;
             uartSetup.dataWidth = UART_DATA_8_BIT;
@@ -329,40 +348,14 @@ void APP_Tasks(void) {
             UART1_ReadThresholdSet(1);
             UART1_ReadNotificationEnable(true, false);
 
-            //RS485 port # 21
-            DO_U2FC_Clear();
-            uartSetup.baudRate = 19200;
-            uartSetup.dataWidth = UART_DATA_8_BIT;
-            uartSetup.parity = UART_PARITY_NONE;
-            uartSetup.stopBits = UART_STOP_1_BIT;
-            UART2_SerialSetup(&uartSetup, 0);
-            UART2_ReadCallbackRegister(APP_UART2_Rx_Callback, NULL);
-            UART2_ReadThresholdSet(1);
-            UART2_ReadNotificationEnable(true, false);
-
-            // rs232 port on Terminal strip
-            uartSetup.baudRate = 38400;
-            uartSetup.dataWidth = UART_DATA_8_BIT;
-            uartSetup.parity = UART_PARITY_NONE;
-            uartSetup.stopBits = UART_STOP_1_BIT;
-            UART3_SerialSetup(&uartSetup, 0);
-            UART3_ReadCallbackRegister(APP_UART3_Rx_Callback, NULL);
-            UART3_ReadThresholdSet(1);
-            UART3_ReadNotificationEnable(true, false);
-
-            //RS485 port #1
-            DO_U4FC_Clear();
-            uartSetup.baudRate = 115200;
-            uartSetup.dataWidth = UART_DATA_8_BIT;
-            uartSetup.parity = UART_PARITY_NONE;
-            uartSetup.stopBits = UART_STOP_1_BIT;
-            UART4_SerialSetup(&uartSetup, 0);
-            UART4_ReadCallbackRegister(APP_UART4_Rx_Callback, NULL);
-            UART4_ReadThresholdSet(1);
-            UART4_ReadNotificationEnable(true, false);
 
             console = SYS_CONSOLE_HandleGet(0);
-
+            for (int i = 0; i < Holding_Register_Read_L; i++) {
+                Modbus_Slave_EnablePoint(MODBUS_FUNCTION_READ_HOLDING_REGISTER, i, 1);
+            }
+            for (int i = 0; i < Holding_Register_Read_L; i++) {
+                Modbus_Slave_Holding_Register_Store(0, i);
+            }
             bool appInitialized = true;
             if (appInitialized) {
 
@@ -375,16 +368,10 @@ void APP_Tasks(void) {
         {
             //
             uint8_t i;
-            if (DO_U2FC_Get() && !IEC1bits.U2TXIE && U2STAbits.TRMT)
-                DO_U2FC_Clear();
-            if (DO_U4FC_Get() && !IEC2bits.U4TXIE && U4STAbits.TRMT)
-                DO_U4FC_Clear();
+            if (DO_U1FC_Get() && !IEC1bits.U1TXIE && U1STAbits.TRMT)
+                DO_U1FC_Clear();
             if (SYS_CONSOLE_Read(console, &consoleBuffer[consoleBufferIndex], 1) >= 1) {
                 UART1_Write(&consoleBuffer[consoleBufferIndex], 1);
-                //                APP_UART2_Write(&consoleBuffer[consoleBufferIndex],1);
-                //                UART3_Write(&consoleBuffer[consoleBufferIndex],1);
-                //                APP_UART4_Write(&consoleBuffer[consoleBufferIndex],1);
-
                 SYS_CONSOLE_Write(console, &consoleBuffer[consoleBufferIndex], 1);
                 if (consoleBufferIndex < SERIAL_PORT_BUFFER_SIZE)
                     consoleBufferIndex++;
@@ -395,67 +382,100 @@ void APP_Tasks(void) {
                 }
 
             }
-            char test_in;
-            test_in = UART_CUSTOM_READ();
-            
-            
-            for (i = 0; i < SERIAL_PORT_COUNT; i++) {
-                if (comDataRx[i]) {
-                    comDataRx[i] = false;
-                    memset(comBuffer[i], 0x00, SERIAL_PORT_BUFFER_SIZE);
-                    uint16_t len = 0, count = 0;
-                    switch (i) {
-                        case 0:
-                            len = UART1_ReadCountGet();
-                            count = UART1_Read(comBuffer[i], len);
 
+            if (comDataRx[0]) {
+                comDataRx[0] = false;
+                memset(comBuffer[0], 0x00, SERIAL_PORT_BUFFER_SIZE);
 
-                            //                            if (count > 0) {
-                            //                                
-                            //                                APP_UART2_Write(comBuffer[i], len);
-                            //                                APP_UART4_Write(comBuffer[i], len);
-                            //                                UART3_Write(comBuffer[i], count);
-                            //                                SYS_DEBUG_PRINT(SYS_ERROR_INFO, "%s", comBuffer[i]);
-                            //                            }
-                            break;
-                        case 1:
-                            //                            len = UART2_ReadCountGet();
-                            //                            count = UART2_Read(comBuffer[i], len);
-                            //                            if (count > 0) {
-                            //                                UART1_Write(comBuffer[i], count);
-                            //                                UART3_Write(comBuffer[i], count);
-                            //                                APP_UART4_Write(comBuffer[i], len);
-                            //                                SYS_DEBUG_PRINT(SYS_ERROR_INFO, "%s", comBuffer[i]);
-                            //                            }
-                            break;
-                        case 2:
-                            //                            len = UART3_ReadCountGet();
-                            //                            count = UART3_Read(comBuffer[i], len);
-                            //                            if (count > 0) {
-                            //                                UART1_Write(comBuffer[i], count);
-                            //                                APP_UART2_Write(comBuffer[i], len);
-                            //                                APP_UART4_Write(comBuffer[i], len);
-                            //                                SYS_DEBUG_PRINT(SYS_ERROR_INFO, "%s", comBuffer[i]);
-                            //                            }
-                            break;
-                        case 3:
-                            //                            len = UART4_ReadCountGet();
-                            //                            count = UART4_Read(comBuffer[i], len);
-                            //                            if (count > 0) {
-                            //                                UART1_Write(comBuffer[i], count);
-                            //                                APP_UART2_Write(comBuffer[i], len);
-                            //                                UART3_Write(comBuffer[i], count);
-                            //                                SYS_DEBUG_PRINT(SYS_ERROR_INFO, "%s", comBuffer[i]);
-                            //                            }
-                            break;
-                        default:
-                            SYS_ERROR(SYS_ERROR_ERROR, "APP-Unhandled COM Port\n\r");
-                            break;
-                    }
-                    break;
+                len = UART1_ReadCountGet();
+
+                count = UART1_Read(comBuffer[0], 1);
+                // RS485_Pass_RX(comBuffer[i],count);
+                // Modbus_Tasks();
+                data_pass_buffer[data_in_buffer] = comBuffer[0][0];
+                if (data_pass_buffer[data_in_buffer] != "\r")
+                    data_in_buffer++;
+                //                if(count ==0)
+                //                   data_in_buffer= 0;  
+                // SYS_CONSOLE_Write(console, &comBuffer, 1);
+                if (data_tx) {
+                    data_tx = false;
+                    data_in_buffer = 0;
                 }
+
             }
-            //            if (tick_1s) {
+        }
+
+
+            AIO1_InputEnable();
+            DIO1_Clear();
+            DIO2_Clear();
+
+            AIO2_InputEnable();
+            DIO3_Clear();
+            DIO4_Clear();
+
+            AIO3_InputEnable();
+            DIO5_Clear();
+            DIO6_Clear();
+
+            AIO4_InputEnable();
+            DIO7_Clear();
+            DIO8_Clear();
+
+            AIO5_InputEnable();
+            DIO9_Clear();
+            DIO10_Clear();
+
+            AIO6_InputEnable();
+            DIO11_Clear();
+            DIO12_Clear();
+
+            AIO7_InputEnable();
+            DIO13_Clear();
+            DIO14_Clear();
+
+            AIO8_InputEnable();
+            DIO15_Clear();
+            DIO16_Clear();
+            
+//            if (!AIO8_Get()) {
+//                DO_U1FC_Clear();
+//                UART1_Write(&set, sizeof (set));
+//                DO_U1FC_Set();
+//                ;
+//            }
+            Modbus_Slave_Holding_Register_Store(!AIO1_Get(), 1);
+            Modbus_Slave_Holding_Register_Store(!AIO2_Get(), 2);
+            Modbus_Slave_Holding_Register_Store(!AIO3_Get(), 3);
+            Modbus_Slave_Holding_Register_Store(!AIO4_Get(), 4);
+            Modbus_Slave_Holding_Register_Store(!AIO5_Get(), 5);
+            Modbus_Slave_Holding_Register_Store(!AIO6_Get(), 6);
+            Modbus_Slave_Holding_Register_Store(!AIO7_Get(), 7);
+            Modbus_Slave_Holding_Register_Store(!AIO8_Get(), 8);
+
+            int i = 0;
+            if (data_in_buffer > 4) {
+                for (i = 0; i < data_in_buffer; i++) {
+
+                    CRCcheckIn = (uint16_t) (data_pass_buffer[data_in_buffer - 1] << 8) | (data_pass_buffer[data_in_buffer - 2]);
+                    CRCcheck = usMBCRC16(&data_pass_buffer[0], data_in_buffer - 2);
+                    if (CRCcheckIn == CRCcheck) {
+                        SYS_CONSOLE_Write(console, &data_pass_buffer, data_in_buffer);
+                        RS485_Pass_RX(data_pass_buffer, data_in_buffer);
+                        Modbus_Tasks();
+                        data_in_buffer = 0;
+                        data_tx = true;
+
+                    }
+
+                }
+
+            }
+
+
+
+
             //                tick_1s = false;
             //                //        UART1_Write("UART1", 5);
             //                //        APP_UART2_Write("UART2", 5);
@@ -495,8 +515,8 @@ void APP_Tasks(void) {
             //        {
             //            /* TODO: Handle error in application's state machine. */
             //            break;
-        }
     }
+
 }
 
 

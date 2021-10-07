@@ -158,11 +158,11 @@
               <itemPath>../src/config/development/peripheral/tmr/plib_tmr2.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="uart" projectFiles="true">
-              <itemPath>../src/config/development/peripheral/uart/plib_uart_common.h</itemPath>
               <itemPath>../src/config/development/peripheral/uart/plib_uart3.h</itemPath>
               <itemPath>../src/config/development/peripheral/uart/plib_uart4.h</itemPath>
-              <itemPath>../src/config/development/peripheral/uart/plib_uart1.h</itemPath>
               <itemPath>../src/config/development/peripheral/uart/plib_uart2.h</itemPath>
+              <itemPath>../../../../Users/2/HarmonyProjects/MyProject_1/firmware/src/config/default/peripheral/uart/plib_uart1.h</itemPath>
+              <itemPath>../../../../Users/2/HarmonyProjects/MyProject_1/firmware/src/config/default/peripheral/uart/plib_uart_common.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f3" displayName="system" projectFiles="true">
@@ -212,6 +212,14 @@
           <itemPath>../src/config/development/user.h</itemPath>
           <itemPath>../src/config/development/configuration.h</itemPath>
         </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="modbus_inc" displayName="modbus_inc" projectFiles="true">
+        <itemPath>../src/modbus_inc/RS485_HAL.h</itemPath>
+        <itemPath>../src/modbus_inc/mb.h</itemPath>
+        <itemPath>../src/modbus_inc/mb_setup.h</itemPath>
+        <itemPath>../src/modbus_inc/mb_slaveregister.h</itemPath>
+        <itemPath>../src/modbus_inc/mbcrc.h</itemPath>
+        <itemPath>../src/modbus_inc/fifo.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="osal" projectFiles="true">
         <itemPath>../src/config/development/osal/osal.h</itemPath>
@@ -306,12 +314,27 @@
           <itemPath>../src/config/development/tasks.c</itemPath>
         </logicalFolder>
       </logicalFolder>
+      <logicalFolder name="modbus_src" displayName="modbus_src" projectFiles="true">
+        <itemPath>../src/modbus_src/mb.c</itemPath>
+        <itemPath>../src/modbus_src/mbcrc.c</itemPath>
+        <itemPath>../src/modbus_src/mb_setup.c</itemPath>
+        <itemPath>../src/modbus_src/RS485_HAL.c</itemPath>
+        <itemPath>../src/modbus_src/fifo.c</itemPath>
+      </logicalFolder>
       <itemPath>../src/main.c</itemPath>
       <itemPath>../src/app.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
+      <logicalFolder name="f2" displayName="default.mhc" projectFiles="true">
+        <itemPath>../../../../Users/2/HarmonyProjects/MyProject_1/firmware/src/config/default/default.mhc/core.yml</itemPath>
+        <itemPath>../../../../Users/2/HarmonyProjects/MyProject_1/firmware/src/config/default/default.mhc/dfp.yml</itemPath>
+        <itemPath>../../../../Users/2/HarmonyProjects/MyProject_1/firmware/src/config/default/default.mhc/GraphSettings.yml</itemPath>
+        <itemPath>../../../../Users/2/HarmonyProjects/MyProject_1/firmware/src/config/default/default.mhc/project.yml</itemPath>
+        <itemPath>../../../../Users/2/HarmonyProjects/MyProject_1/firmware/src/config/default/default.mhc/settings.yml</itemPath>
+        <itemPath>../../../../Users/2/HarmonyProjects/MyProject_1/firmware/src/config/default/default.mhc/uart1.yml</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="development.mhc" projectFiles="true">
         <itemPath>../src/config/development/development.mhc/core.yml</itemPath>
         <itemPath>../src/config/development/development.mhc/dfp.yml</itemPath>
@@ -379,7 +402,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/development;../src/packs/PIC32MX250F256H_DFP"/>
+                  value="../src;../src/config/development;../src/packs/PIC32MX250F256H_DFP;../src/modbus_inc;../src/modbus_src"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>

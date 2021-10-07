@@ -864,7 +864,7 @@ void USB_DEVICE_Tasks( SYS_MODULE_OBJ devLayerObj )
     Opens the specific module instance and returns a handle.
 
   Description:
-    This function opens the USB device layer for use by any client module and
+    This function opens the USB device la yer for use by any client module and
     provides a handle that must be provided to any of the other device layer
     operations to identify the caller and the instance of the driver/hardware
     module.

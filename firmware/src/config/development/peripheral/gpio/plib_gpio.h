@@ -60,7 +60,229 @@
 // Section: Data types and constants
 // *****************************************************************************
 // *****************************************************************************
+        
+#define DIO6_Set()               (LATESET = (1<<5))
+#define DIO6_Clear()             (LATECLR = (1<<5))
+#define DIO6_Toggle()            (LATEINV= (1<<5))
+#define DIO6_OutputEnable()      (TRISECLR = (1<<5))
+#define DIO6_InputEnable()       (TRISESET = (1<<5))
+#define DIO6_Get()               ((PORTE >> 5) & 0x1)
+#define DIO6_PIN                  GPIO_PIN_RE5
 
+/*** Macros for DIO7 pin ***/
+#define DIO7_Set()               (LATESET = (1<<6))
+#define DIO7_Clear()             (LATECLR = (1<<6))
+#define DIO7_Toggle()            (LATEINV= (1<<6))
+#define DIO7_OutputEnable()      (TRISECLR = (1<<6))
+#define DIO7_InputEnable()       (TRISESET = (1<<6))
+#define DIO7_Get()               ((PORTE >> 6) & 0x1)
+#define DIO7_PIN                  GPIO_PIN_RE6
+
+/*** Macros for DIO8 pin ***/
+#define DIO8_Set()               (LATESET = (1<<7))
+#define DIO8_Clear()             (LATECLR = (1<<7))
+#define DIO8_Toggle()            (LATEINV= (1<<7))
+#define DIO8_OutputEnable()      (TRISECLR = (1<<7))
+#define DIO8_InputEnable()       (TRISESET = (1<<7))
+#define DIO8_Get()               ((PORTE >> 7) & 0x1)
+#define DIO8_PIN                  GPIO_PIN_RE7
+
+/*** Macros for DIO9 pin ***/
+#define DIO9_Set()               (LATBSET = (1<<8))
+#define DIO9_Clear()             (LATBCLR = (1<<8))
+#define DIO9_Toggle()            (LATBINV= (1<<8))
+#define DIO9_OutputEnable()      (TRISBCLR = (1<<8))
+#define DIO9_InputEnable()       (TRISBSET = (1<<8))
+#define DIO9_Get()               ((PORTB >> 8) & 0x1)
+#define DIO9_PIN                  GPIO_PIN_RB8
+
+/*** Macros for DIO10 pin ***/
+#define DIO10_Set()               (LATBSET = (1<<9))
+#define DIO10_Clear()             (LATBCLR = (1<<9))
+#define DIO10_Toggle()            (LATBINV= (1<<9))
+#define DIO10_OutputEnable()      (TRISBCLR = (1<<9))
+#define DIO10_InputEnable()       (TRISBSET = (1<<9))
+#define DIO10_Get()               ((PORTB >> 9) & 0x1)
+#define DIO10_PIN                  GPIO_PIN_RB9
+
+/*** Macros for DIO11 pin ***/
+#define DIO11_Set()               (LATBSET = (1<<10))
+#define DIO11_Clear()             (LATBCLR = (1<<10))
+#define DIO11_Toggle()            (LATBINV= (1<<10))
+#define DIO11_OutputEnable()      (TRISBCLR = (1<<10))
+#define DIO11_InputEnable()       (TRISBSET = (1<<10))
+#define DIO11_Get()               ((PORTB >> 10) & 0x1)
+#define DIO11_PIN                  GPIO_PIN_RB10
+
+/*** Macros for DIO12 pin ***/
+#define DIO12_Set()               (LATBSET = (1<<11))
+#define DIO12_Clear()             (LATBCLR = (1<<11))
+#define DIO12_Toggle()            (LATBINV= (1<<11))
+#define DIO12_OutputEnable()      (TRISBCLR = (1<<11))
+#define DIO12_InputEnable()       (TRISBSET = (1<<11))
+#define DIO12_Get()               ((PORTB >> 11) & 0x1)
+#define DIO12_PIN                  GPIO_PIN_RB11
+
+/*** Macros for DIO13 pin ***/
+#define DIO13_Set()               (LATBSET = (1<<12))
+#define DIO13_Clear()             (LATBCLR = (1<<12))
+#define DIO13_Toggle()            (LATBINV= (1<<12))
+#define DIO13_OutputEnable()      (TRISBCLR = (1<<12))
+#define DIO13_InputEnable()       (TRISBSET = (1<<12))
+#define DIO13_Get()               ((PORTB >> 12) & 0x1)
+#define DIO13_PIN                  GPIO_PIN_RB12
+
+/*** Macros for DIO14 pin ***/
+#define DIO14_Set()               (LATBSET = (1<<13))
+#define DIO14_Clear()             (LATBCLR = (1<<13))
+#define DIO14_Toggle()            (LATBINV= (1<<13))
+#define DIO14_OutputEnable()      (TRISBCLR = (1<<13))
+#define DIO14_InputEnable()       (TRISBSET = (1<<13))
+#define DIO14_Get()               ((PORTB >> 13) & 0x1)
+#define DIO14_PIN                  GPIO_PIN_RB13
+
+/*** Macros for DIO15 pin ***/
+#define DIO15_Set()               (LATBSET = (1<<14))
+#define DIO15_Clear()             (LATBCLR = (1<<14))
+#define DIO15_Toggle()            (LATBINV= (1<<14))
+#define DIO15_OutputEnable()      (TRISBCLR = (1<<14))
+#define DIO15_InputEnable()       (TRISBSET = (1<<14))
+#define DIO15_Get()               ((PORTB >> 14) & 0x1)
+#define DIO15_PIN                  GPIO_PIN_RB14
+
+/*** Macros for DIO16 pin ***/
+#define DIO16_Set()               (LATBSET = (1<<15))
+#define DIO16_Clear()             (LATBCLR = (1<<15))
+#define DIO16_Toggle()            (LATBINV= (1<<15))
+#define DIO16_OutputEnable()      (TRISBCLR = (1<<15))
+#define DIO16_InputEnable()       (TRISBSET = (1<<15))
+#define DIO16_Get()               ((PORTB >> 15) & 0x1)
+#define DIO16_PIN                  GPIO_PIN_RB15
+        
+/*** Macros for AIO6 pin ***/
+#define AIO6_Set()               (LATBSET = (1<<5))
+#define AIO6_Clear()             (LATBCLR = (1<<5))
+#define AIO6_Toggle()            (LATBINV= (1<<5))
+#define AIO6_OutputEnable()      (TRISBCLR = (1<<5))
+#define AIO6_InputEnable()       (TRISBSET = (1<<5))
+#define AIO6_Get()               ((PORTB >> 5) & 0x1)
+#define AIO6_PIN                  GPIO_PIN_RB5
+
+/*** Macros for AIO5 pin ***/
+#define AIO5_Set()               (LATBSET = (1<<4))
+#define AIO5_Clear()             (LATBCLR = (1<<4))
+#define AIO5_Toggle()            (LATBINV= (1<<4))
+#define AIO5_OutputEnable()      (TRISBCLR = (1<<4))
+#define AIO5_InputEnable()       (TRISBSET = (1<<4))
+#define AIO5_Get()               ((PORTB >> 4) & 0x1)
+#define AIO5_PIN                  GPIO_PIN_RB4
+
+/*** Macros for AIO4 pin ***/
+#define AIO4_Set()               (LATBSET = (1<<3))
+#define AIO4_Clear()             (LATBCLR = (1<<3))
+#define AIO4_Toggle()            (LATBINV= (1<<3))
+#define AIO4_OutputEnable()      (TRISBCLR = (1<<3))
+#define AIO4_InputEnable()       (TRISBSET = (1<<3))
+#define AIO4_Get()               ((PORTB >> 3) & 0x1)
+#define AIO4_PIN                  GPIO_PIN_RB3
+
+/*** Macros for AIO3 pin ***/
+#define AIO3_Set()               (LATBSET = (1<<2))
+#define AIO3_Clear()             (LATBCLR = (1<<2))
+#define AIO3_Toggle()            (LATBINV= (1<<2))
+#define AIO3_OutputEnable()      (TRISBCLR = (1<<2))
+#define AIO3_InputEnable()       (TRISBSET = (1<<2))
+#define AIO3_Get()               ((PORTB >> 2) & 0x1)
+#define AIO3_PIN                  GPIO_PIN_RB2
+
+/*** Macros for AIO2 pin ***/
+#define AIO2_Set()               (LATBSET = (1<<1))
+#define AIO2_Clear()             (LATBCLR = (1<<1))
+#define AIO2_Toggle()            (LATBINV= (1<<1))
+#define AIO2_OutputEnable()      (TRISBCLR = (1<<1))
+#define AIO2_InputEnable()       (TRISBSET = (1<<1))
+#define AIO2_Get()               ((PORTB >> 1) & 0x1)
+#define AIO2_PIN                  GPIO_PIN_RB1
+
+/*** Macros for AIO1 pin ***/
+#define AIO1_Set()               (LATBSET = (1<<0))
+#define AIO1_Clear()             (LATBCLR = (1<<0))
+#define AIO1_Toggle()            (LATBINV= (1<<0))
+#define AIO1_OutputEnable()      (TRISBCLR = (1<<0))
+#define AIO1_InputEnable()       (TRISBSET = (1<<0))
+#define AIO1_Get()               ((PORTB >> 0) & 0x1)
+#define AIO1_PIN                  GPIO_PIN_RB0
+
+/*** Macros for AIO7 pin ***/
+#define AIO7_Set()               (LATBSET = (1<<6))
+#define AIO7_Clear()             (LATBCLR = (1<<6))
+#define AIO7_Toggle()            (LATBINV= (1<<6))
+#define AIO7_OutputEnable()      (TRISBCLR = (1<<6))
+#define AIO7_InputEnable()       (TRISBSET = (1<<6))
+#define AIO7_Get()               ((PORTB >> 6) & 0x1)
+#define AIO7_PIN                  GPIO_PIN_RB6
+
+/*** Macros for AIO8 pin ***/
+#define AIO8_Set()               (LATBSET = (1<<7))
+#define AIO8_Clear()             (LATBCLR = (1<<7))
+#define AIO8_Toggle()            (LATBINV= (1<<7))
+#define AIO8_OutputEnable()      (TRISBCLR = (1<<7))
+#define AIO8_InputEnable()       (TRISBSET = (1<<7))
+#define AIO8_Get()               ((PORTB >> 7) & 0x1)
+#define AIO8_PIN                  GPIO_PIN_RB7
+
+/*** Macros for DIO1 pin ***/
+#define DIO1_Set()               (LATESET = (1<<0))
+#define DIO1_Clear()             (LATECLR = (1<<0))
+#define DIO1_Toggle()            (LATEINV= (1<<0))
+#define DIO1_OutputEnable()      (TRISECLR = (1<<0))
+#define DIO1_InputEnable()       (TRISESET = (1<<0))
+#define DIO1_Get()               ((PORTE >> 0) & 0x1)
+#define DIO1_PIN                  GPIO_PIN_RE0
+
+/*** Macros for DIO2 pin ***/
+#define DIO2_Set()               (LATESET = (1<<1))
+#define DIO2_Clear()             (LATECLR = (1<<1))
+#define DIO2_Toggle()            (LATEINV= (1<<1))
+#define DIO2_OutputEnable()      (TRISECLR = (1<<1))
+#define DIO2_InputEnable()       (TRISESET = (1<<1))
+#define DIO2_Get()               ((PORTE >> 1) & 0x1)
+#define DIO2_PIN                  GPIO_PIN_RE1
+
+/*** Macros for DIO3 pin ***/
+#define DIO3_Set()               (LATESET = (1<<2))
+#define DIO3_Clear()             (LATECLR = (1<<2))
+#define DIO3_Toggle()            (LATEINV= (1<<2))
+#define DIO3_OutputEnable()      (TRISECLR = (1<<2))
+#define DIO3_InputEnable()       (TRISESET = (1<<2))
+#define DIO3_Get()               ((PORTE >> 2) & 0x1)
+#define DIO3_PIN                  GPIO_PIN_RE2
+
+/*** Macros for DIO4 pin ***/
+#define DIO4_Set()               (LATESET = (1<<3))
+#define DIO4_Clear()             (LATECLR = (1<<3))
+#define DIO4_Toggle()            (LATEINV= (1<<3))
+#define DIO4_OutputEnable()      (TRISECLR = (1<<3))
+#define DIO4_InputEnable()       (TRISESET = (1<<3))
+#define DIO4_Get()               ((PORTE >> 3) & 0x1)
+#define DIO4_PIN                  GPIO_PIN_RE3
+
+/*** Macros for DIO5 pin ***/
+#define DIO5_Set()               (LATESET = (1<<4))
+#define DIO5_Clear()             (LATECLR = (1<<4))
+#define DIO5_Toggle()            (LATEINV= (1<<4))
+#define DIO5_OutputEnable()      (TRISECLR = (1<<4))
+#define DIO5_InputEnable()       (TRISESET = (1<<4))
+#define DIO5_Get()               ((PORTE >> 4) & 0x1)
+#define DIO5_PIN                  GPIO_PIN_RE4        
+        
+#define DO_U1FC_Set()               (LATFSET = (1<<3))
+#define DO_U1FC_Clear()             (LATFCLR = (1<<3))
+#define DO_U1FC_Toggle()            (LATFINV= (1<<3))
+#define DO_U1FC_OutputEnable()      (TRISFCLR = (1<<3))
+#define DO_U1FC_InputEnable()       (TRISFSET = (1<<3))
+#define DO_U1FC_Get()               ((PORTF >> 3) & 0x1)
+#define DO_U1FC_PIN                  GPIO_PIN_RF3
 /*** Macros for DO_U4FC pin ***/
 #define DO_U4FC_Set()               (LATBSET = (1<<13))
 #define DO_U4FC_Clear()             (LATBCLR = (1<<13))
