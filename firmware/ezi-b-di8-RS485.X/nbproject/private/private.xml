@@ -3,22 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/peripheral/gpio/plib_gpio.h</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/peripheral/gpio/plib_gpio.c</file>
+            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/definitions.h</file>
+            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/peripheral/evic/plib_evic.h</file>
             <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/peripheral/evic/plib_evic.c</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/tasks.c</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/peripheral/tmr/plib_tmr2.c</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/usb/src/usb_device.c</file>
-            <file>file:/C:/Program%20Files/Microchip/MPLABX/v5.50/packs/Microchip/PIC32MX_DFP/1.5.259/xc32/startup/crt0.S</file>
-            <file>file:/C:/Program%20Files/Microchip/MPLABX/v5.50/packs/Microchip/PIC32MX_DFP/1.5.259/include/proc/p32mx250f256h.h</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/app.c</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/peripheral/clk/plib_clk.c</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/system/console/src/sys_console_usb_cdc.c</file>
+            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/ezi-b-di8-RS485.X/nbproject/Makefile-development.mk</file>
             <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/main.c</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/driver/usb/usbfs/src/drv_usbfs_device.c</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/peripheral/coretimer/plib_coretimer.c</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/config/development/peripheral/uart/plib_uart1.c</file>
-            <file>file:/C:/Gitrepo/ez-b-di8-rs485/firmware/src/app.h</file>
         </group>
     </open-files>
 </project-private>
