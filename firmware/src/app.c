@@ -96,7 +96,6 @@ int temp_debounce = 0;
 // *****************************************************************************
 void update_ui();
 
-
 uint8_t UART_CUSTOM_READ() {
     uint8_t data_byte;
     while (U1STAbits.URXDA) {
@@ -118,7 +117,7 @@ static volatile void APP_UART1_Rx_Callback(UART_EVENT event, uintptr_t context) 
 }
 
 static volatile void APP_UART2_Rx_Callback(UART_EVENT event, uintptr_t context) {
-    
+
     comDataRx[1] = true;
     //        SYS_CONSOLE_MESSAGE("U2 Rx\n\r");
 }
@@ -348,7 +347,7 @@ void APP_Initialize(void) {
     DIO15_Clear();
     DIO16_Clear();
 
-   
+
 }
 
 /******************************************************************************
@@ -395,7 +394,7 @@ void APP_Tasks(void) {
             previous_value[6] = !AIO7_Get();
             previous_value[7] = !AIO8_Get();
 
-      
+
 
 
             console = SYS_CONSOLE_HandleGet(0);
@@ -432,7 +431,7 @@ void APP_Tasks(void) {
 
             }
 
-            if (comDataRx[0]) { 
+            if (comDataRx[0]) {
                 comDataRx[0] = false;
                 memset(comBuffer[0], 0x00, SERIAL_PORT_BUFFER_SIZE);
 
@@ -451,52 +450,57 @@ void APP_Tasks(void) {
                     data_tx = false;
                     data_in_buffer = 0;
                 }
-              
+
             }
         }
 
-
             if (data_in_buffer > 4) {
+
                 for (int i = 0; i < data_in_buffer; i++) {
- 
+
                     CRCcheckIn = (uint16_t) (data_pass_buffer[data_in_buffer - 1] << 8) | (data_pass_buffer[data_in_buffer - 2]);
                     CRCcheck = usMBCRC16(&data_pass_buffer[0], data_in_buffer - 2);
+
                     if (CRCcheckIn == CRCcheck) {
-                         LED_1_Toggle();          
+                        LED_1_Toggle();
                         SYS_CONSOLE_Write(console, &data_pass_buffer, data_in_buffer);
                         RS485_Pass_RX(data_pass_buffer, data_in_buffer);
                         Modbus_Tasks();
                         data_in_buffer = 0;
                         data_tx = true;
-                     
+
                     }
+
+                    if (data_in_buffer > 10 && CRCcheckIn != CRCcheck) {
+                        data_in_buffer = 0;
+                    }
+
+
 
                 }
 
             }
-        
-        update_ui();
+
+            update_ui();
             for (int i = 0; i < 8; i++) {
-                if (current_value[i] != previous_value[i]) {              
-                    if(tick_10ms)
-                    {
-                      tick_10ms = false;
-                      debounce_counter++;
-                      update_ui();
-                      temp_debounce = current_value[i];
+                if (current_value[i] != previous_value[i]) {
+                    if (tick_10ms) {
+                        tick_10ms = false;
+                        debounce_counter++;
+                        update_ui();
+                        temp_debounce = current_value[i];
                     }
-                    if(temp_debounce!=previous_value[i] && debounce_counter > 5 )
-                    {
-                       previous_value[i] =current_value[i]; 
-                      debounce_counter = 0;
+                    if (temp_debounce != previous_value[i] && debounce_counter > 5) {
+                        previous_value[i] = current_value[i];
+                        debounce_counter = 0;
                     }
-                    
+
                 }
             }
-            
-        
+
+
             for (int i = 1; i <= 8; i++) {
-               Modbus_Slave_Holding_Register_Store(previous_value[i-1], i);
+                Modbus_Slave_Holding_Register_Store(previous_value[i - 1], i);
 
             }
 
@@ -504,13 +508,12 @@ void APP_Tasks(void) {
 
 
 
-        if(tick_1s)
-        {
-            tick_1s = false;
-             LED_4_Toggle();
-              LED_1_Set();
-    LED_2_Set();
-        }
+            if (tick_1s) {
+                tick_1s = false;
+                LED_4_Toggle();
+                LED_1_Set();
+                LED_2_Set();
+            }
 
             //                tick_1s = false;
             //                //        UART1_Write("UART1", 5);
@@ -555,18 +558,16 @@ void APP_Tasks(void) {
 
 }
 
-
 /*******************************************************************************
  End of File
  */
-void update_ui()
-{
+void update_ui() {
     current_value[0] = !AIO1_Get();
-            current_value[1] = !AIO2_Get();
-            current_value[2] = !AIO3_Get();
-            current_value[3] = !AIO4_Get();
-            current_value[4] = !AIO5_Get();
-            current_value[5] = !AIO6_Get();
-            current_value[6] = !AIO7_Get();
-            current_value[7] = !AIO8_Get();
+    current_value[1] = !AIO2_Get();
+    current_value[2] = !AIO3_Get();
+    current_value[3] = !AIO4_Get();
+    current_value[4] = !AIO5_Get();
+    current_value[5] = !AIO6_Get();
+    current_value[6] = !AIO7_Get();
+    current_value[7] = !AIO8_Get();
 }
