@@ -72,7 +72,7 @@ DRV_HANDLE time;
 SYS_CONSOLE_HANDLE console;
 
 static bool tick_1s = false;
-static bool tick_100ms = false;
+static bool tick_10ms = false;
 
 uint8_t i2c_write_buffer[I2C_EEPROM_PAGE_SIZE];
 uint8_t i2c_read_buffer[I2C_EEPROM_PAGE_SIZE];
@@ -83,7 +83,10 @@ uint16_t CRCcheck;
 uint16_t CRCcheckIn;
 bool data_tx = false;
 char set[] = "Set\n\r";
-
+int previous_value[8] = {0};
+int current_value[8] = {0};
+int debounce_counter = 0;
+int temp_debounce = 0;
 
 
 // *****************************************************************************
@@ -91,6 +94,8 @@ char set[] = "Set\n\r";
 // Section: Application Callback Functions
 // *****************************************************************************
 // *****************************************************************************
+void update_ui();
+
 
 uint8_t UART_CUSTOM_READ() {
     uint8_t data_byte;
@@ -105,13 +110,15 @@ void APP_I2C_Callback(uintptr_t context) {
 }
 
 static volatile void APP_UART1_Rx_Callback(UART_EVENT event, uintptr_t context) {
-    LED_1_Toggle();
+    LED_2_Toggle();
+
+
     comDataRx[0] = true;
     //  SYS_CONSOLE_MESSAGE("U1 Rx\n\r");
 }
 
 static volatile void APP_UART2_Rx_Callback(UART_EVENT event, uintptr_t context) {
-    LED_2_Toggle();
+    
     comDataRx[1] = true;
     //        SYS_CONSOLE_MESSAGE("U2 Rx\n\r");
 }
@@ -257,8 +264,8 @@ void APP_1s_Tick(uintptr_t context) {
     tick_1s = true;
 }
 
-void APP_100ms_Tick(uintptr_t context) {
-    tick_100ms = true;
+void APP_10ms_Tick(uintptr_t context) {
+    tick_10ms = true;
 }
 
 static void APP_Parse_Console_Command(const char *data, uint16_t len) {
@@ -309,7 +316,39 @@ void APP_Initialize(void) {
         memset(comBuffer[i], 0x00, SERIAL_PORT_BUFFER_SIZE);
         comDataRx[i] = 0;
     }
+    AIO1_InputEnable();
+    DIO1_Clear();
+    DIO2_Clear();
 
+    AIO2_InputEnable();
+    DIO3_Clear();
+    DIO4_Clear();
+
+    AIO3_InputEnable();
+    DIO5_Clear();
+    DIO6_Clear();
+
+    AIO4_InputEnable();
+    DIO7_Clear();
+    DIO8_Clear();
+
+    AIO5_InputEnable();
+    DIO9_Clear();
+    DIO10_Clear();
+
+    AIO6_InputEnable();
+    DIO11_Clear();
+    DIO12_Clear();
+
+    AIO7_InputEnable();
+    DIO13_Clear();
+    DIO14_Clear();
+
+    AIO8_InputEnable();
+    DIO15_Clear();
+    DIO16_Clear();
+
+   
 }
 
 /******************************************************************************
@@ -337,7 +376,7 @@ void APP_Tasks(void) {
 
             APP_Load_Settings_From_Eeprom();
             SYS_TIME_CallbackRegisterMS(APP_1s_Tick, NULL, 1000, SYS_TIME_PERIODIC);
-            SYS_TIME_CallbackRegisterMS(APP_1s_Tick, NULL, 100, SYS_TIME_PERIODIC);
+            SYS_TIME_CallbackRegisterMS(APP_10ms_Tick, NULL, 10, SYS_TIME_PERIODIC);
             // RS 232 Port (Pin header on base boarD)
             uartSetup.baudRate = 9600;
             uartSetup.dataWidth = UART_DATA_8_BIT;
@@ -347,6 +386,16 @@ void APP_Tasks(void) {
             UART1_ReadCallbackRegister(APP_UART1_Rx_Callback, NULL);
             UART1_ReadThresholdSet(1);
             UART1_ReadNotificationEnable(true, false);
+            previous_value[0] = !AIO1_Get();
+            previous_value[1] = !AIO2_Get();
+            previous_value[2] = !AIO3_Get();
+            previous_value[3] = !AIO4_Get();
+            previous_value[4] = !AIO5_Get();
+            previous_value[5] = !AIO6_Get();
+            previous_value[6] = !AIO7_Get();
+            previous_value[7] = !AIO8_Get();
+
+      
 
 
             console = SYS_CONSOLE_HandleGet(0);
@@ -383,7 +432,7 @@ void APP_Tasks(void) {
 
             }
 
-            if (comDataRx[0]) {
+            if (comDataRx[0]) { 
                 comDataRx[0] = false;
                 memset(comBuffer[0], 0x00, SERIAL_PORT_BUFFER_SIZE);
 
@@ -402,79 +451,66 @@ void APP_Tasks(void) {
                     data_tx = false;
                     data_in_buffer = 0;
                 }
-
+              
             }
         }
 
 
-            AIO1_InputEnable();
-            DIO1_Clear();
-            DIO2_Clear();
-
-            AIO2_InputEnable();
-            DIO3_Clear();
-            DIO4_Clear();
-
-            AIO3_InputEnable();
-            DIO5_Clear();
-            DIO6_Clear();
-
-            AIO4_InputEnable();
-            DIO7_Clear();
-            DIO8_Clear();
-
-            AIO5_InputEnable();
-            DIO9_Clear();
-            DIO10_Clear();
-
-            AIO6_InputEnable();
-            DIO11_Clear();
-            DIO12_Clear();
-
-            AIO7_InputEnable();
-            DIO13_Clear();
-            DIO14_Clear();
-
-            AIO8_InputEnable();
-            DIO15_Clear();
-            DIO16_Clear();
-            
-//            if (!AIO8_Get()) {
-//                DO_U1FC_Clear();
-//                UART1_Write(&set, sizeof (set));
-//                DO_U1FC_Set();
-//                ;
-//            }
-            Modbus_Slave_Holding_Register_Store(!AIO1_Get(), 1);
-            Modbus_Slave_Holding_Register_Store(!AIO2_Get(), 2);
-            Modbus_Slave_Holding_Register_Store(!AIO3_Get(), 3);
-            Modbus_Slave_Holding_Register_Store(!AIO4_Get(), 4);
-            Modbus_Slave_Holding_Register_Store(!AIO5_Get(), 5);
-            Modbus_Slave_Holding_Register_Store(!AIO6_Get(), 6);
-            Modbus_Slave_Holding_Register_Store(!AIO7_Get(), 7);
-            Modbus_Slave_Holding_Register_Store(!AIO8_Get(), 8);
-
-            int i = 0;
             if (data_in_buffer > 4) {
-                for (i = 0; i < data_in_buffer; i++) {
-
+                for (int i = 0; i < data_in_buffer; i++) {
+ 
                     CRCcheckIn = (uint16_t) (data_pass_buffer[data_in_buffer - 1] << 8) | (data_pass_buffer[data_in_buffer - 2]);
                     CRCcheck = usMBCRC16(&data_pass_buffer[0], data_in_buffer - 2);
                     if (CRCcheckIn == CRCcheck) {
+                         LED_1_Toggle();          
                         SYS_CONSOLE_Write(console, &data_pass_buffer, data_in_buffer);
                         RS485_Pass_RX(data_pass_buffer, data_in_buffer);
                         Modbus_Tasks();
                         data_in_buffer = 0;
                         data_tx = true;
-
+                     
                     }
 
                 }
 
             }
+        
+        update_ui();
+            for (int i = 0; i < 8; i++) {
+                if (current_value[i] != previous_value[i]) {              
+                    if(tick_10ms)
+                    {
+                      tick_10ms = false;
+                      debounce_counter++;
+                      update_ui();
+                      temp_debounce = current_value[i];
+                    }
+                    if(temp_debounce!=previous_value[i] && debounce_counter > 5 )
+                    {
+                       previous_value[i] =current_value[i]; 
+                      debounce_counter = 0;
+                    }
+                    
+                }
+            }
+            
+        
+            for (int i = 1; i <= 8; i++) {
+               Modbus_Slave_Holding_Register_Store(previous_value[i-1], i);
+
+            }
 
 
 
+
+
+        if(tick_1s)
+        {
+            tick_1s = false;
+             LED_4_Toggle();
+              LED_1_Set();
+    LED_2_Set();
+        }
 
             //                tick_1s = false;
             //                //        UART1_Write("UART1", 5);
@@ -523,4 +559,14 @@ void APP_Tasks(void) {
 /*******************************************************************************
  End of File
  */
-
+void update_ui()
+{
+    current_value[0] = !AIO1_Get();
+            current_value[1] = !AIO2_Get();
+            current_value[2] = !AIO3_Get();
+            current_value[3] = !AIO4_Get();
+            current_value[4] = !AIO5_Get();
+            current_value[5] = !AIO6_Get();
+            current_value[6] = !AIO7_Get();
+            current_value[7] = !AIO8_Get();
+}

@@ -57,6 +57,7 @@
 */
 void GPIO_Initialize ( void )
 {
+
     /* PORTB Initialization */
     LATB = 0x0; /* Initial Latch Value */
     TRISBCLR = 0xff00; /* Direction Control */
@@ -91,15 +92,15 @@ void GPIO_Initialize ( void )
 
     /* PPS Input Remapping */
     U1RXR = 4;
-    U3RXR = 8;
-    U4RXR = 2;
-    U2RXR = 2;
+  //  U3RXR = 8;
+  //  U4RXR = 2;
+  //  U2RXR = 2;
 
     /* PPS Output Remapping */
     RPF0R = 3;
-    RPB5R = 1;
-    RPB15R = 2;
-    RPF3R = 1;
+   // RPB5R = 1;
+  //  RPB15R = 2;
+  //  RPF3R = 1;
 
     /* Lock back the system after PPS configuration */
     SYSKEY = 0x00000000;

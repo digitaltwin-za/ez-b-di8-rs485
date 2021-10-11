@@ -57,10 +57,10 @@ void EVIC_Initialize( void )
     IPC2SET = 0x4 | 0x0;  /* TIMER_2:  Priority 1 / Subpriority 0 */
     IPC7SET = 0x400 | 0x0;  /* USB_1:  Priority 1 / Subpriority 0 */
     IPC7SET = 0xc000000 | 0x0;  /* UART_1:  Priority 3 / Subpriority 0 */
-    IPC8SET = 0x10 | 0x0;  /* I2C_1:  Priority 4 / Subpriority 0 */
-    IPC9SET = 0x1c | 0x1;  /* UART_2:  Priority 7 / Subpriority 1 */
-    IPC9SET = 0x140000 | 0x10000;  /* UART_3:  Priority 5 / Subpriority 1 */
-    IPC9SET = 0x18000000 | 0x0;  /* UART_4:  Priority 6 / Subpriority 0 */
+  //  IPC8SET = 0x10 | 0x0;  /* I2C_1:  Priority 4 / Subpriority 0 */
+ //   IPC9SET = 0x1c | 0x1;  /* UART_2:  Priority 7 / Subpriority 1 */
+   // IPC9SET = 0x140000 | 0x10000;  /* UART_3:  Priority 5 / Subpriority 1 */
+   // IPC9SET = 0x18000000 | 0x0;  /* UART_4:  Priority 6 / Subpriority 0 */
 }
 
 void EVIC_SourceEnable( INT_SOURCE source )

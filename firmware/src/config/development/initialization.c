@@ -86,7 +86,7 @@
 #pragma config UPLLIDIV =   DIV_2
 
 /*** DEVCFG3 ***/
-#pragma config FVBUSONIO =  ON
+#pragma config FVBUSONIO =  OFF
 #pragma config USERID =     0xffff
 #pragma config PMDL1WAY =   OFF
 #pragma config IOL1WAY =    OFF
@@ -252,7 +252,7 @@ void SYS_Initialize ( void* data )
     CLK_Initialize();
 
     /* Set the SRAM wait states to zero */
-    BMXCONbits.BMXWSDRM = 0;
+   // BMXCONbits.BMXWSDRM = 0;
 
 
 
@@ -260,14 +260,14 @@ void SYS_Initialize ( void* data )
 	GPIO_Initialize();
 
     CORETIMER_Initialize();
-    I2C1_Initialize();
-	UART3_Initialize();
+  //  I2C1_Initialize();
+	//UART3_Initialize();
 
-	UART4_Initialize();
+//	UART4_Initialize();
 
 	UART1_Initialize();
 
-	UART2_Initialize();
+//	UART2_Initialize();
 
     TMR2_Initialize();
 
