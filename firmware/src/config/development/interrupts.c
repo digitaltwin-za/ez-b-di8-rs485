@@ -106,7 +106,15 @@ void __ISR(_UART_4_VECTOR, ipl6AUTO) UART_4_Handler (void)
 }
 
 
+void NVM_InterruptHandler( void );
 
+
+
+/* All the handlers are defined here.  Each will call its PLIB-specific function. */
+void __ISR(_FCE_VECTOR, ipl1SOFT) FCE_Handler (void)
+{
+    NVM_InterruptHandler();
+}
 
 
 /*******************************************************************************

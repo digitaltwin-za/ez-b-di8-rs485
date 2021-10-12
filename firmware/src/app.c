@@ -49,6 +49,7 @@
 #include "mbcrc.h"
 #include "modbus_inc/mb_slaveregister.h"
 #include "modbus_inc/RS485_HAL.h"
+#include "plib_nvm.h"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data Definitions
@@ -61,7 +62,31 @@
 #define SERIAL_PORT_BUFFER_SIZE 512
 #define SERIAL_PORT_COUNT 1
 
+#define READ_WRITE_SIZE         (600)
+#define BUFFER_SIZE             (READ_WRITE_SIZE / sizeof(uint32_t))
 
+#define APP_FLASH_ADDRESS       (NVM_FLASH_START_ADDRESS + (NVM_FLASH_SIZE / 2))
+
+#define LED_ON                  LED1_Set
+#define LED_OFF                 LED1_Clear
+#define LED_TOGGLE              LED1_Toggle
+
+uint32_t writeData[BUFFER_SIZE] CACHE_ALIGN;
+uint32_t readData[BUFFER_SIZE];
+
+static volatile bool xferDone = false;
+
+static void populate_buffer(void) {
+    uint32_t i = 0;
+
+    for (i = 0; i < BUFFER_SIZE; i++) {
+        writeData[i] = i;
+    }
+}
+
+static void eventHandler(uintptr_t context) {
+    xferDone = true;
+}
 volatile static uint8_t comBuffer[SERIAL_PORT_COUNT][SERIAL_PORT_BUFFER_SIZE];
 volatile static bool comDataRx[SERIAL_PORT_COUNT];
 volatile static uint8_t consoleBuffer[SERIAL_PORT_BUFFER_SIZE];
@@ -366,6 +391,50 @@ void APP_Tasks(void) {
             /* Application's initial state. */
         case APP_STATE_INIT:
         {
+
+            uint32_t address = APP_FLASH_ADDRESS;
+            uint8_t *writePtr = (uint8_t *) writeData;
+            uint32_t i = 0;
+
+            /* Initialize all modules */
+
+            /*Populate random data to programmed*/
+            populate_buffer();
+
+            NVM_CallbackRegister(eventHandler, (uintptr_t) NULL);
+
+            while (NVM_IsBusy() == true);
+
+            /* Erase the Page */
+            NVM_PageErase(address);
+
+            while (xferDone == false);
+
+            xferDone = false;
+
+            for (i = 0; i < READ_WRITE_SIZE; i += NVM_FLASH_ROWSIZE) {
+                /* Program a row of data */
+                NVM_RowWrite((uint32_t *) writePtr, address);
+
+                while (xferDone == false);
+
+                xferDone = false;
+
+                writePtr += NVM_FLASH_ROWSIZE;
+                address += NVM_FLASH_ROWSIZE;
+            }
+
+            NVM_Read(readData, sizeof (writeData), APP_FLASH_ADDRESS);
+
+
+
+
+
+
+
+
+
+
             data_in_buffer = 0;
             UART_SERIAL_SETUP uartSetup;
             uartSetup.baudRate = 9600;

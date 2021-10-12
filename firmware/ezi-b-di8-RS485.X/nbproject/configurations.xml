@@ -153,6 +153,9 @@
               <itemPath>../src/config/development/peripheral/i2c/plib_i2c1.h</itemPath>
               <itemPath>../src/config/development/peripheral/i2c/plib_i2c_master.h</itemPath>
             </logicalFolder>
+            <logicalFolder name="f8" displayName="nvm" projectFiles="true">
+              <itemPath>../src/plib_nvm.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="f7" displayName="tmr" projectFiles="true">
               <itemPath>../src/config/development/peripheral/tmr/plib_tmr_common.h</itemPath>
               <itemPath>../src/config/development/peripheral/tmr/plib_tmr2.h</itemPath>
@@ -267,6 +270,9 @@
             </logicalFolder>
             <logicalFolder name="f5" displayName="i2c" projectFiles="true">
               <itemPath>../src/config/development/peripheral/i2c/plib_i2c1.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f8" displayName="nvm" projectFiles="true">
+              <itemPath>../src/plib_nvm.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f7" displayName="tmr" projectFiles="true">
               <itemPath>../src/config/development/peripheral/tmr/plib_tmr2.c</itemPath>
@@ -402,7 +408,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/development;../src/packs/PIC32MX250F256H_DFP;../src/modbus_inc;../src/modbus_src"/>
+                  value="../src;../src/config/development;../src/packs/PIC32MX250F256H_DFP;../src/modbus_inc;../src/modbus_src;../src/config/development/peripheral/nvm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -751,8 +757,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d03ffff"/>
         <property key="memories.rww" value="true"/>
-        <property key="programmerToGoFilePath"
-                  value="C:/Gitrepo/ezi-2x232-2x485-firmware/firmware/ezi-2x232-2x485.X/debug/development/ezi-2x232-2x485_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>

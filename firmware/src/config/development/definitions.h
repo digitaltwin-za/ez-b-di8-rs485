@@ -71,6 +71,7 @@
 #include "osal/osal.h"
 #include "system/debug/sys_debug.h"
 #include "app.h"
+#include "plib_nvm.h"
 
 
 

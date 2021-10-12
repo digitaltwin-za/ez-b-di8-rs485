@@ -292,7 +292,7 @@ void SYS_Initialize ( void* data )
 
     APP_Initialize();
 
-
+    NVM_Initialize();
     EVIC_Initialize();
 
 	/* Enable global interrupts */
